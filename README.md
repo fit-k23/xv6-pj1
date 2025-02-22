@@ -1,3 +1,17 @@
+## 1. Usage
+### 1.1 Setup: Ubuntu - WSL
+1. `sudo apt update`
+2. `sudo apt upgrade`
+3. `sudo apt install git build-essential qemu-system gcc-riscv64-linux-gnu`
+4. `git clone https://github.com/fit-k23/xv6-pj1.git xv6`
+5. `cd xv6`
+6. `make`
+7. `make qemu`
+8. xv6 is launched!
+### 1.2 Exit xv6
+1. Press `Ctrl + A` then release and quickly press `C` to enter QEMU terminal line.
+2. Press `Q` for quit.
+## 2. Original README
 xv6 is a re-implementation of Dennis Ritchie's and Ken Thompson's Unix
 Version 6 (v6).  xv6 loosely follows the structure and style of v6,
 but is implemented for a modern RISC-V multiprocessor using ANSI C.
