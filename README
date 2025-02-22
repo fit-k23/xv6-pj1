@@ -11,6 +11,9 @@
 ### 1.2 Exit xv6
 1. Press `Ctrl + A` then release and quickly press `C` to enter QEMU terminal line.
 2. Press `Q` for quit.
+### 1.3 Run xv6
+1. Run `make` to rebuilt changes
+2. Run `make qemu` to run QEMU and xv6
 ## 2. Original README
 xv6 is a re-implementation of Dennis Ritchie's and Ken Thompson's Unix
 Version 6 (v6).  xv6 loosely follows the structure and style of v6,
