@@ -9,6 +9,8 @@
 7. `make qemu`
 8. xv6 is launched!
 ### 1.2 Exit xv6
+1. Press `Ctrl + A` then press `X` to exit.
+### 1.2b Exit xv6
 1. Press `Ctrl + A` then release and quickly press `C` to enter QEMU terminal line.
 2. Press `Q` for quit.
 ### 1.3 Run xv6
