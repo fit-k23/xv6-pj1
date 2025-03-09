@@ -180,3 +180,20 @@ filewrite(struct file *f, uint64 addr, int n)
   return ret;
 }
 
+int             
+count_open_file(void)
+{
+  int open = 0;
+  struct file *f;
+
+  acquire(&ftable.lock);
+  for(f = ftable.file; f < ftable.file + NFILE; f++){
+    if(f->ref > 0) {
+      ++open;
+      // printf("File at index %d has ref count %d and type %d\n", (int)(f - ftable.file), f->ref, f->type);
+    }
+  }
+  release(&ftable.lock);
+  return open;
+}
+

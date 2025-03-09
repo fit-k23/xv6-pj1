@@ -302,6 +302,9 @@ fork(void)
   // Cause fork to return 0 in the child.
   np->trapframe->a0 = 0;
 
+  // Copy request mask from parent to child process 
+  np->requestmask = p->requestmask;
+
   // increment reference counts on open file descriptors.
   for(i = 0; i < NOFILE; i++)
     if(p->ofile[i])
@@ -692,4 +695,15 @@ procdump(void)
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
   }
+}
+
+int             
+count_unused_proc(void)
+{
+  int unused = 0;
+  struct proc *p;
+  for (p = proc; p < &proc[NPROC]; ++p)
+    if (p->state == UNUSED)
+      ++unused;
+  return unused;
 }
