@@ -10,6 +10,6 @@ int main(int argc, char** argv) {
     struct sysinfo sysinf;
     info(&sysinf);
 
-    printf("Free memory: %lu bytes\nUnused processes: %d\nOpen files: %d\n", sysinf.freemem, sysinf.nproc, sysinf.nopenfiles);
+    printf("Free memory: %lu bytes\nNum of non UNUSED processes: %d\nNum of openned files: %d\n", sysinf.freemem, sysinf.nproc, sysinf.nopenfiles);
     exit(1);
 }

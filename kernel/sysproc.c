@@ -114,7 +114,7 @@ sys_info(void)
   struct sysinfo *u_mode_info;
   argaddr(0, (uint64 *)&u_mode_info);
   k_mode_info.freemem = (uint64)(PGSIZE * (uint64)kcountfree());
-  k_mode_info.nproc = count_unused_proc();
+  k_mode_info.nproc = count_non_unused_proc();
   k_mode_info.nopenfiles = count_open_file();
   return copyout(myproc()->pagetable, (uint64)u_mode_info, (char*)&k_mode_info, sizeof(k_mode_info));
 }

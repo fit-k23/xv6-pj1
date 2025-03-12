@@ -698,12 +698,12 @@ procdump(void)
 }
 
 int             
-count_unused_proc(void)
+count_non_unused_proc(void)
 {
   int unused = 0;
   struct proc *p;
   for (p = proc; p < &proc[NPROC]; ++p)
-    if (p->state == UNUSED)
+    if (p->state != UNUSED)
       ++unused;
   return unused;
 }
