@@ -92,10 +92,42 @@ sys_uptime(void)
   return xticks;
 }
 
-// flag print pagetable
+// set flag to print pagetable
 uint64
 sys_flagpgtbl(void)
 {
   myproc()->flagpgtbl = 1;
   return 0;
+}
+
+// detect accessed pages
+uint64 
+sys_pageaccess(void)
+{
+  uint64 start_va;
+  int npages;
+  uint64 bitmask;
+
+  argaddr(0, &start_va);
+  argint(1, &npages); 
+  argaddr(2, &bitmask);
+
+  if (npages > 32)
+    return -1;
+
+  uint64 res = 0;
+
+  struct proc *cur_proc = myproc();
+
+  // Traverse each base virtual address of pages (base_pva)
+  int page_index = 0;
+  for (uint64 base_pva = start_va; base_pva < start_va + PGSIZE * npages; base_pva += PGSIZE) {
+    pte_t *pte = walk(cur_proc->pagetable, base_pva, 0);
+    if ((*pte & PTE_V) && (*pte & PTE_A)) {
+      res |= (1L << page_index);
+      *pte ^= PTE_A; // turn off accessed bit 
+    }
+    ++page_index;
+  }
+  return copyout(cur_proc->pagetable, bitmask, (char *) &res, sizeof(res));
 }

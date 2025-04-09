@@ -11,6 +11,6 @@ main(int argc, char** argv)
   flagpgtbl();
   if (exec(argv[1], &argv[1]) < 0) {
     printf("pgtbl: exec %s failed\n", argv[1]);
-    }
+  }
   exit(0);
 }

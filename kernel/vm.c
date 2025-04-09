@@ -464,7 +464,7 @@ vmprint_recursive(pagetable_t pagetable, int level)
       uint64 child = PTE2PA(pte);
       printf("..%d: pte %p pa %p\n", i, (void *) pte, (void *) child);
 
-      // print next level
+      // print next level if is intermediate page table
       if((pte & (PTE_R|PTE_W|PTE_X)) == 0) {
         vmprint_recursive((pagetable_t)child, level + 1);
       }

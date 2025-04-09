@@ -22,7 +22,8 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
-int flagpgtbl(void);
+int flagpgtbl(void); 
+int pageaccess(uint64, int, uint64);
 
 // ulib.c
 int stat(const char*, struct stat*);
