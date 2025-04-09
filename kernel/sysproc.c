@@ -91,3 +91,11 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+// flag print pagetable
+uint64
+sys_flagpgtbl(void)
+{
+  myproc()->flagpgtbl = 1;
+  return 0;
+}

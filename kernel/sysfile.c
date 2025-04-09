@@ -435,7 +435,7 @@ uint64
 sys_exec(void)
 {
   char path[MAXPATH], *argv[MAXARG];
-  int i;
+  int i; // after iteration should have the number of args
   uint64 uargv, uarg;
 
   argaddr(1, &uargv);
