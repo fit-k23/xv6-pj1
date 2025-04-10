@@ -121,17 +121,7 @@ sys_pageaccess(void)
 
   struct proc *cur_proc = myproc();
 
-  // Traverse each base address of pages (base_pgaddr)
-  int page_index = 0;
-  for (uint64 base_pgaddr = start_va; base_pgaddr < start_va + PGSIZE * npages; base_pgaddr += PGSIZE) {
-    // Get a pointer to the PTE that maps the virtual address base_pgaddr
-    pte_t *pte = walk(cur_proc->pagetable, base_pgaddr, 0);
-    if ((*pte & PTE_V) && (*pte & PTE_A)) { // dereference pte and check for access bit
-      res |= (1L << page_index);
-      *pte ^= PTE_A; // turn off accessed bit for latest update
-    }
-    ++page_index;
-  }
+  res = detect_access(cur_proc->pagetable, start_va, npages);
 
   // Copy res to bitmask, the bitmask will then be stored in register a0 
   // for user program to retrieve the result

@@ -480,3 +480,22 @@ vmprint(pagetable_t pagetable)
   printf("page table %p\n", pagetable);
   vmprint_recursive(pagetable, 0);
 }
+
+// Traverse through known range of virtual address and detect accessed pages
+uint64 
+detect_access(pagetable_t pagetable, uint64 start_va, int npages)
+{
+  uint64 mask = 0;
+  // Traverse each base address of pages (base_pgaddr)
+  int page_index = 0;
+  for (uint64 base_pgaddr = start_va; base_pgaddr < start_va + PGSIZE * npages; base_pgaddr += PGSIZE) {
+    // Get a pointer to the PTE that maps the virtual address base_pgaddr
+    pte_t *pte = walk(pagetable, base_pgaddr, 0);
+    if ((*pte & PTE_V) && (*pte & PTE_A)) { // dereference pte and check for access bit
+      mask |= (1L << page_index);
+      *pte ^= PTE_A; // turn off accessed bit for latest update
+    }
+    ++page_index;
+  }
+  return mask;
+}

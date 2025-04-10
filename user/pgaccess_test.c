@@ -8,7 +8,7 @@ pgaccess_test()
     char *buf;
     uint64 bitmask;
 
-    printf("Detecting page access...\n");
+    printf("Detecting accessed page...\n");
 
     // allocate 32 pages for user program
     // use the malloc function in umalloc.c/line 64

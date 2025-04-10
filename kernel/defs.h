@@ -77,7 +77,7 @@ int             piperead(struct pipe*, uint64, int);
 int             pipewrite(struct pipe*, uint64, int);
 
 // printf.c
-int            printf(char*, ...) __attribute__ ((format (printf, 1, 2)));
+int             printf(char*, ...) __attribute__ ((format (printf, 1, 2)));
 void            panic(char*) __attribute__((noreturn));
 void            printfinit(void);
 
@@ -173,9 +173,9 @@ uint64          walkaddr(pagetable_t, uint64);
 int             copyout(pagetable_t, uint64, char *, uint64);
 int             copyin(pagetable_t, char *, uint64, uint64);
 int             copyinstr(pagetable_t, char *, uint64, uint64);
-
 void            vmprint(pagetable_t);
 void            vmprint_recursive(pagetable_t, int);
+uint64          detect_access(pagetable_t, uint64, int);
 
 // plic.c
 void            plicinit(void);
