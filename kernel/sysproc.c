@@ -108,10 +108,12 @@ sys_pageaccess(void)
   int npages;
   uint64 bitmask;
 
+  // Retreat the argument from 3 param registers from user program
   argaddr(0, &start_va);
   argint(1, &npages); 
   argaddr(2, &bitmask);
 
+  // Set upper limit for number of checked pages to 32
   if (npages > 32)
     return -1;
 
@@ -119,15 +121,19 @@ sys_pageaccess(void)
 
   struct proc *cur_proc = myproc();
 
-  // Traverse each base virtual address of pages (base_pva)
+  // Traverse each base address of pages (base_pgaddr)
   int page_index = 0;
-  for (uint64 base_pva = start_va; base_pva < start_va + PGSIZE * npages; base_pva += PGSIZE) {
-    pte_t *pte = walk(cur_proc->pagetable, base_pva, 0);
-    if ((*pte & PTE_V) && (*pte & PTE_A)) {
+  for (uint64 base_pgaddr = start_va; base_pgaddr < start_va + PGSIZE * npages; base_pgaddr += PGSIZE) {
+    // Get a pointer to the PTE that maps the virtual address base_pgaddr
+    pte_t *pte = walk(cur_proc->pagetable, base_pgaddr, 0);
+    if ((*pte & PTE_V) && (*pte & PTE_A)) { // dereference pte and check for access bit
       res |= (1L << page_index);
-      *pte ^= PTE_A; // turn off accessed bit 
+      *pte ^= PTE_A; // turn off accessed bit for latest update
     }
     ++page_index;
   }
+
+  // Copy res to bitmask, the bitmask will then be stored in register a0 
+  // for user program to retrieve the result
   return copyout(cur_proc->pagetable, bitmask, (char *) &res, sizeof(res));
 }

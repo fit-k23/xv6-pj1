@@ -8,39 +8,47 @@ pgaccess_test()
     char *buf;
     uint64 bitmask;
 
-    printf("Detecting page access!\n");
+    printf("Detecting page access...\n");
 
-    // allocate virtual addresses for user program
+    // allocate 32 pages for user program
+    // use the malloc function in umalloc.c/line 64
     buf = malloc(32 * PGSIZE);
-    memset(buf, 0, sizeof(buf));
 
-    // Set valid bit for some pages (allow to access)
-    int allow[] = {2, 5, 6, 10};
-    for (int i = 0; i < sizeof(allow)/sizeof(int); ++i)
-        buf[allow[i] * PGSIZE] += 1;
+    // Access to some pages to trigger their access bit 
+    // The 2-th and 3-th value tries accessing within the page for more ensured check
+    // The first page of the virtual memory (page 0) in this program will always be accessed, because we pass the pointer buf
+    // to system call sys_pgaccess(), which reads the address of buf[0].
+    int valid[] = {2 * PGSIZE, 5 * PGSIZE, 6 * PGSIZE + 25, 10 * PGSIZE + 5};
+    int want[] = {0, 2, 5, 6, 10};
+    for (int i = 0; i < sizeof(valid)/sizeof(int); ++i)
+        buf[valid[i]] = '2';
 
     if (pageaccess((uint64)buf, 32, (uint64)&bitmask) < 0) {
-        printf("Fail in page access test!\n");
+        printf("Fail in page access system call!\n");
         free(buf);
         return;
     }
 
-    printf("Bitmask of result: ");
-    for (int i = 32; i >= 0; --i) {
-        if (bitmask & (1 << i))
+    printf("Result bitmask: ");
+    for (int i = 31; i >= 0; --i) {
+        if (bitmask & (1 << i)) 
             printf("%d", 1);
         else printf("%d", 0);
     }
     printf("\n");
 
+    for (int i = 31; i >= 0; --i) {
+        if (bitmask & (1 << i)) 
+            printf("page %d is accessed\n", i);
+    }
+
     // Check invalid page access
     int invalid = 0;
-    for (int i = 0; i < sizeof(allow)/sizeof(int); ++i)
-        if (!(bitmask & (1 << allow[i])))
+    for (int i = 0; i < sizeof(want)/sizeof(int); ++i)
+        if (!(bitmask & (1 << want[i])))
             invalid = 1;
-
     if (invalid) {
-        printf("Inaccurate accessed page!\n");
+        printf("Inaccurate result!\n");
         free(buf);
         return;
     }

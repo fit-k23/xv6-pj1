@@ -465,6 +465,7 @@ vmprint_recursive(pagetable_t pagetable, int level)
       printf("..%d: pte %p pa %p\n", i, (void *) pte, (void *) child);
 
       // print next level if is intermediate page table
+      // only leaf page table entries are used for address translation
       if((pte & (PTE_R|PTE_W|PTE_X)) == 0) {
         vmprint_recursive((pagetable_t)child, level + 1);
       }
